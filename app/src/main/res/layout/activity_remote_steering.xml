@@ -1,0 +1,60 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    tools:context="jlrostc.ben.x351remotecontrol.RemoteSteering">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:fitsSystemWindows="true"
+                 android:background="#ffffff">
+
+        <LinearLayout android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+        </LinearLayout>
+
+        <SeekBar
+            android:layout_width="181dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_gravity="center"
+            />
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:text="LEFT"
+            android:id="@+id/leftButton"
+            android:layout_gravity="left|center_vertical"/>
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:text="RIGHT"
+            android:id="@+id/rightButton"
+            android:layout_gravity="right|center_vertical"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/txtAngle"
+            android:layout_gravity="center_horizontal|top"
+            android:gravity="center_vertical"/>
+    </FrameLayout>
+
+</FrameLayout>
