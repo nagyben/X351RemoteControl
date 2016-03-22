@@ -1,24 +1,13 @@
 package jlrostc.ben.x351remotecontrol;
 
-import android.content.Context;
-import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.telephony.TelephonyManager;
-import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class UDPSender extends Thread {
     private InetAddress IPAddress;
@@ -48,10 +37,9 @@ public class UDPSender extends Thread {
         PacketHandler = new Handler (new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                if (UDPEnabled && mUDPSocketOpen) {
+                if (UDPEnabled) {
                     RemoteControlPacket rcp = (RemoteControlPacket) msg.obj;
-                    if (!sendSteeringAngle(rcp.EACEnabled, rcp.SteeringAngle)) sendFailCount++;
-                    socketCounter = 0;
+                    sendSteeringAngle(rcp.EACEnabled, rcp.SteeringAngle);
                 }
                 return true;
             }
@@ -103,7 +91,8 @@ public class UDPSender extends Thread {
         }
 
         // convert to byte array
-        byte[] enableSteeringBytes = ByteBuffer.allocate(1).order(ByteOrder.LITTLE_ENDIAN).putInt(enableSteering).array();
+        byte enableSteeringByte = (byte) enableSteering;
+        //byte[] enableSteeringBytes = ByteBuffer.allocate(1).order(ByteOrder.LITTLE_ENDIAN).putInt(enableSteering).array();
 
         // the second and third byte is a two-byte integer between 0 and 8000
 
@@ -118,13 +107,13 @@ public class UDPSender extends Thread {
         sentAngle += 4000;
 
         // convert to byte array
-        byte[] sentAngleBytes = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putInt(sentAngle).array();
+        //byte[] sentAngleBytes = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putInt(sentAngle).array();
 
         // bang 'em together
         byte[] sentMessage = new byte[3];
-        sentMessage[0] = enableSteeringBytes[0];
-        sentMessage[1] = sentAngleBytes[0];
-        sentMessage[2] = sentAngleBytes[1];
+        sentMessage[0] = enableSteeringByte;
+        sentMessage[1] = (byte) ((sentAngle >> 8) & 0xFF); //sentAngleBytes[1];
+        sentMessage[2] = (byte) (sentAngle & 0xFF); //sentAngleBytes[0];
 
         // send
         return sendUDPPacket(sentMessage, sentMessage.length);
